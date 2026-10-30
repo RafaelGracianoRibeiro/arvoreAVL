@@ -65,7 +65,7 @@ No* rotacaoEsquerda(No* x) {
     return y; // Nova raiz da subarvore
 }
 
-//Criando a funcao de inserir um valor
+//Criando a funcao de inserir um valor na arvore
 No* inserir(No* raiz, int valor) {
     //Verificando se o valor da minha raiz e nulo
     if (raiz == nullptr) {
@@ -80,8 +80,12 @@ No* inserir(No* raiz, int valor) {
         return raiz;
     }
 
+    //Comecando a logica AVL para balancear a arvore
     //Atualizando a altura do no
+    //A altura de um no especifico e a maior distancia de arestas entre ele e qualquer folha abaixo dele
+    //Definimos a altura do no como 1 + a maior altura de seus filhos
     raiz->altura = 1 + maior(retornaAltura(raiz->esquerda), retornaAltura(raiz->direita));
+    
     //Achando o fator de balanceamento
     int fb = FB(raiz);
     //Desbalanceado se fb > 1 ou fb < -1
