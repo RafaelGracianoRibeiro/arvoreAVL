@@ -50,19 +50,19 @@ No* rotacaoDireita(No* noDesbalanceado) {
     return x;
 }
 
-No* rotacaoEsquerda(No* x) {
-    No* y = x->direita;
-    No* B = y->esquerda;
+No* rotacaoEsquerda(No* noDesbalanceado) {
+    No* x = noDesbalanceado->direita;//Instanciando a direita do meu no atual
+    No* y = x->esquerda;//Salvando o valor a esquerda de x
 
     // Executa a rotacao
-    y->esquerda = x;
-    x->direita = B;
+    x->esquerda = noDesbalanceado;//O lado esquerdo do meu x se torna minha antiga raiz
+    noDesbalanceado->direita = y;//Agora a direita da antiga raiz eu guardo o valor salvo x->esquerda(Y)
 
     // Atualiza as alturas
+    noDesbalanceado->altura = maior(retornaAltura(noDesbalanceado->esquerda), retornaAltura(noDesbalanceado->direita)) + 1;
     x->altura = maior(retornaAltura(x->esquerda), retornaAltura(x->direita)) + 1;
-    y->altura = maior(retornaAltura(y->esquerda), retornaAltura(y->direita)) + 1;
 
-    return y; // Nova raiz da subarvore
+    return x; // Nova raiz da subarvore
 }
 
 //Criando a funcao de inserir um valor na arvore
@@ -83,18 +83,19 @@ No* inserir(No* raiz, int valor) {
     //Comecando a logica AVL para balancear a arvore
     //Atualizando a altura do no
     //A altura de um no especifico e a maior distancia de arestas entre ele e qualquer folha abaixo dele
-    //Definimos a altura do no como 1 + a maior altura de seus filhos
+    //Definimos a altura do no como 1 + a maior altura de seus filhos (filhos nulos = 0)
     raiz->altura = 1 + maior(retornaAltura(raiz->esquerda), retornaAltura(raiz->direita));
     
-    //Achando o fator de balanceamento
+    //Achando o fator de balanceamento do meu valor
     int fb = FB(raiz);
     //Desbalanceado se fb > 1 ou fb < -1
 
+    //Verificando 
     if (fb > 1 && valor < raiz->esquerda->valor) {
         return rotacaoDireita(raiz);
     }
 
-    if (fb > -1 && valor > raiz->direita->valor) {
+    if (fb < -1 && valor > raiz->direita->valor) {
         return rotacaoEsquerda(raiz);
     }
 
@@ -125,12 +126,12 @@ bool busca(No* raiz, int valor) {
 }
 
 //Imprimindo minha arvore no modelo In-Order
-void imprimir(No* raiz) {
+void imprimirInOrder(No* raiz) {
     //Verificando se minha raiz existe
     if (raiz != nullptr) {
-        imprimir(raiz->esquerda);
+        imprimirInOrder(raiz->esquerda);
         cout << raiz->valor << " ";
-        imprimir(raiz->direita);
+        imprimirInOrder(raiz->direita);
     }
 }
 
@@ -147,9 +148,12 @@ int main() {
     raiz = inserir(raiz, 12);
     raiz = inserir(raiz, 8);
     raiz = inserir(raiz, 100);
+    raiz = inserir(raiz, 13);
+    raiz = inserir(raiz, 16);
+    raiz = inserir(raiz, 122);
 
     cout << "Elementos da arvore (In-Order) esquerda -> raiz -> direita : ";
-    imprimir(raiz); cout << endl;
+    imprimirInOrder(raiz); cout << endl;
 
     return 0;
 }
